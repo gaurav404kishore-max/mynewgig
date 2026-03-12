@@ -1,0 +1,1 @@
+{"name": "cricket-availability-checker","version": "1.0.0","description": "A Node.js project to check cricket availability","main": "index.js","scripts": {"test": "echo 'Error: no test specified' && exit 1"},"author": "gaurav404kishore-max","license": "ISC"}
