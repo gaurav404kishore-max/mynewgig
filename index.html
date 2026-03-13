@@ -530,7 +530,8 @@
       setTimeout(() => toast.style.display = 'none', 3500);
     } catch (err) {
       toast.className = 'toast error';
-      toast.textContent = 'Error saving. Check your connection.';
+      toast.textContent = 'Error: ' + (err.message || JSON.stringify(err));
+console.error('Full error:', err);
       toast.style.display = 'block';
     }
 
