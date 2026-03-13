@@ -369,7 +369,25 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function openAdmin() { renderAdminOverview(); renderAdminPlayers(); document.getElementById('admin-overlay').classList.add('open'); }
+  const ADMIN_PIN = '6276';
+  let adminUnlocked = false;
+
+  function openAdmin() {
+    if (adminUnlocked) {
+      renderAdminOverview(); renderAdminPlayers();
+      document.getElementById('admin-overlay').classList.add('open');
+      return;
+    }
+    const entered = prompt('Enter admin PIN:');
+    if (entered === null) return;
+    if (entered === ADMIN_PIN) {
+      adminUnlocked = true;
+      renderAdminOverview(); renderAdminPlayers();
+      document.getElementById('admin-overlay').classList.add('open');
+    } else {
+      alert('Wrong PIN. Try again.');
+    }
+  }
   function closeAdmin() { document.getElementById('admin-overlay').classList.remove('open'); }
   function handleOverlayClick(e) { if (e.target === document.getElementById('admin-overlay')) closeAdmin(); }
 
