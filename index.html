@@ -2,394 +2,175 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weekend Cricket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Squad Up 🏏</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green: #2D6A4F;
-      --green-light: #B7E4C7;
-      --green-bg: #F0FBF4;
-      --red: #C0392B;
-      --red-light: #FADBD8;
-      --amber: #D35400;
-      --amber-light: #FAE5D3;
-      --gray: #F7F7F5;
-      --border: #E5E5E0;
-      --text: #1A1A18;
-      --muted: #6B6B64;
-      --white: #FFFFFF;
-      --radius: 10px;
+      --pitch: #1B4332; --pitch-mid: #2D6A4F; --pitch-light: #52B788;
+      --pitch-pale: #D8F3DC; --pitch-faint: #F0FBF4;
+      --amber: #F9C74F; --amber-dark: #7B4F00; --amber-bg: #3D2B00;
+      --red: #E63946; --red-bg: #FADBD8;
+      --text: #1A1A18; --muted: #6B6B64; --border: #E5E5E0;
+      --surface: #F8F8F6; --white: #FFFFFF; --radius: 14px;
+      --font: 'Barlow', sans-serif; --font-cond: 'Barlow Condensed', sans-serif;
     }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: #F2F1EE;
-      color: var(--text);
-      min-height: 100vh;
-      padding: 0;
-    }
-
-    .header {
-      background: var(--green);
-      color: white;
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .header-title {
-      font-size: 17px;
-      font-weight: 600;
-      letter-spacing: -0.2px;
-    }
-
-    .header-sub {
-      font-size: 12px;
-      opacity: 0.7;
-      font-family: 'DM Mono', monospace;
-      margin-top: 2px;
-    }
-
-    .cricket-icon {
-      font-size: 28px;
-    }
-
-    .tabs {
-      display: flex;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .tab {
-      flex: 1;
-      padding: 12px;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      border: none;
-      background: none;
-      color: var(--muted);
-      border-bottom: 2px solid transparent;
-      transition: all 0.15s;
-    }
-
-    .tab.active {
-      color: var(--green);
-      border-bottom-color: var(--green);
-    }
-
-    .page { display: none; padding: 1.25rem; max-width: 600px; margin: 0 auto; }
-    .page.active { display: block; }
-
-    .card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-    }
-
-    .card-label {
-      font-size: 11px;
-      font-family: 'DM Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      background: var(--gray);
-      color: var(--text);
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6B64' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      cursor: pointer;
-    }
-
-    .weekend-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .weekend-row:last-child { border-bottom: none; }
-
-    .weekend-name {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .weekend-date {
-      font-size: 12px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      margin-top: 2px;
-    }
-
-    .toggle-wrap { display: flex; gap: 6px; }
-
-    .toggle {
-      padding: 7px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--gray);
-      color: var(--muted);
-      transition: all 0.12s;
-      font-family: 'DM Sans', sans-serif;
-    }
-
-    .toggle.yes.active {
-      background: var(--green-bg);
-      color: var(--green);
-      border-color: var(--green-light);
-    }
-
-    .toggle.no.active {
-      background: var(--red-light);
-      color: var(--red);
-      border-color: #F1948A;
-    }
-
-    .btn-primary {
-      width: 100%;
-      padding: 12px;
-      background: var(--green);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      transition: opacity 0.15s;
-      margin-top: 4px;
-    }
-
-    .btn-primary:hover { opacity: 0.88; }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .toast {
-      display: none;
-      background: var(--green-bg);
-      color: var(--green);
-      border: 1px solid var(--green-light);
-      border-radius: var(--radius);
-      padding: 10px 14px;
-      font-size: 13px;
-      text-align: center;
-      margin-top: 10px;
-      font-weight: 500;
-    }
-
-    .toast.error {
-      background: var(--red-light);
-      color: var(--red);
-      border-color: #F1948A;
-    }
-
-    /* Admin */
-    .weekend-block { margin-bottom: 1.25rem; }
-
-    .weekend-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .weekend-title {
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .weekend-title-date {
-      font-size: 12px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      font-weight: 400;
-      margin-left: 6px;
-    }
-
-    .badge {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-family: 'DM Mono', monospace;
-    }
-
-    .badge-green { background: var(--green-bg); color: var(--green); }
-    .badge-amber { background: var(--amber-light); color: var(--amber); }
-
-    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-
-    .chip {
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-weight: 500;
-    }
-
-    .chip-yes { background: var(--green-bg); color: var(--green); }
-    .chip-no { background: var(--red-light); color: var(--red); }
-    .chip-pending { background: var(--gray); color: var(--muted); border: 1px solid var(--border); }
-
-    .counts {
-      font-size: 12px;
-      color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      display: flex;
-      gap: 14px;
-    }
-
-    .player-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 9px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-    }
-
-    .player-row:last-child { border-bottom: none; }
-
-    .remove-btn {
-      font-size: 12px;
-      color: var(--red);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      padding: 4px 8px;
-      border-radius: 6px;
-    }
-
-    .remove-btn:hover { background: var(--red-light); }
-
-    .add-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .add-row input {
-      flex: 1;
-      padding: 9px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      background: var(--gray);
-      color: var(--text);
-    }
-
-    .add-row input:focus { outline: none; border-color: var(--green); }
-
-    .add-btn {
-      padding: 9px 16px;
-      background: var(--green);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      white-space: nowrap;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 2rem;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .setup-banner {
-      background: #FFF8E1;
-      border: 1px solid #FFD54F;
-      border-radius: var(--radius);
-      padding: 1rem 1.25rem;
-      margin-bottom: 1rem;
-      font-size: 13px;
-      color: #5D4037;
-      line-height: 1.6;
-    }
-
-    .setup-banner strong { display: block; margin-bottom: 4px; font-size: 14px; }
-    .setup-banner code { background: #FFF3CD; padding: 1px 5px; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 12px; }
+    html, body { height: 100%; }
+    body { font-family: var(--font); background: var(--surface); color: var(--text); min-height: 100vh; max-width: 480px; margin: 0 auto; }
+    .header { background: var(--pitch); padding: 20px 18px 18px; position: sticky; top: 0; z-index: 10; }
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .app-name { font-family: var(--font-cond); font-size: 26px; font-weight: 800; color: #fff; letter-spacing: 0.5px; text-transform: uppercase; }
+    .app-name span { color: var(--pitch-light); }
+    .admin-pill { background: var(--pitch-mid); color: var(--pitch-pale); font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 99px; cursor: pointer; border: none; font-family: var(--font); letter-spacing: 0.04em; }
+    .weekend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .wk-tile { background: var(--pitch-mid); border-radius: 12px; padding: 11px 12px; border: 1.5px solid transparent; }
+    .wk-tile.good { border-color: var(--pitch-light); background: #1A3D2B; }
+    .wk-tile.urgent { background: var(--amber-bg); }
+    .wk-tile-date { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; color: #74C69D; margin-bottom: 5px; text-transform: uppercase; }
+    .wk-tile.urgent .wk-tile-date { color: var(--amber); }
+    .wk-tile-count { display: flex; align-items: baseline; gap: 3px; margin-bottom: 6px; }
+    .wk-tile-num { font-family: var(--font-cond); font-size: 28px; font-weight: 800; color: #fff; line-height: 1; }
+    .wk-tile-denom { font-size: 11px; color: #74C69D; }
+    .wk-tile.urgent .wk-tile-denom { color: var(--amber); }
+    .wk-bar-bg { height: 4px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; margin-bottom: 7px; }
+    .wk-bar-fill { height: 100%; border-radius: 99px; background: var(--pitch-light); transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+    .wk-tile.urgent .wk-bar-fill { background: var(--amber); }
+    .wk-status { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 99px; letter-spacing: 0.03em; }
+    .wk-status.set { background: var(--pitch-light); color: var(--pitch); }
+    .wk-status.close { background: #95D5B2; color: var(--pitch); }
+    .wk-status.need { background: var(--amber); color: var(--amber-dark); }
+    .wk-status.low { background: rgba(249,199,79,0.3); color: var(--amber); }
+    .body { padding: 18px; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+    .player-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 6px; }
+    .player-btn { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 6px; text-align: center; font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; font-family: var(--font); transition: all 0.15s; line-height: 1.2; }
+    .player-btn:active { transform: scale(0.96); }
+    .player-btn.selected { background: var(--pitch); border-color: var(--pitch); color: #fff; }
+    .avail-section { margin-top: 20px; animation: slideUp 0.25s ease; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .avail-greeting { font-family: var(--font-cond); font-size: 22px; font-weight: 800; color: var(--pitch); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.3px; }
+    .avail-sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+    .wk-avail-card { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 13px 14px; margin-bottom: 10px; transition: border-color 0.15s; }
+    .wk-avail-card.confirmed { border-color: var(--pitch-light); background: var(--pitch-faint); }
+    .wk-avail-card.declined { border-color: #F1948A; background: #FEF9F9; }
+    .wk-avail-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .wk-avail-name { font-size: 15px; font-weight: 700; color: var(--text); }
+    .wk-avail-date { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .wk-avail-social { font-size: 11px; color: var(--pitch-light); font-weight: 600; text-align: right; }
+    .wk-avail-social.low { color: var(--amber); }
+    .yn-row { display: flex; gap: 8px; }
+    .yn-btn { flex: 1; padding: 11px; border-radius: 10px; font-size: 14px; font-weight: 700; font-family: var(--font); cursor: pointer; border: 1.5px solid var(--border); background: var(--surface); color: var(--muted); transition: all 0.15s; letter-spacing: 0.03em; }
+    .yn-btn:active { transform: scale(0.97); }
+    .yn-btn.yes.active { background: var(--pitch); border-color: var(--pitch); color: #fff; }
+    .yn-btn.no.active { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+    .save-btn { width: 100%; padding: 15px; background: var(--pitch); color: #fff; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 700; font-family: var(--font); cursor: pointer; margin-top: 6px; letter-spacing: 0.3px; transition: opacity 0.15s, transform 0.1s; }
+    .save-btn:active { transform: scale(0.98); }
+    .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .confirm-view { text-align: center; padding: 30px 18px; animation: slideUp 0.3s ease; }
+    .confirm-icon { width: 72px; height: 72px; background: var(--pitch); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .confirm-title { font-family: var(--font-cond); font-size: 28px; font-weight: 800; color: var(--pitch); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .confirm-sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+    .confirm-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+    .confirm-chip { font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 99px; }
+    .confirm-chip.in { background: var(--pitch-pale); color: var(--pitch); }
+    .confirm-chip.out { background: var(--red-bg); color: var(--red); }
+    .confirm-chip.skip { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+    .back-btn { background: none; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 12px 24px; font-size: 14px; font-weight: 600; font-family: var(--font); color: var(--muted); cursor: pointer; }
+    .admin-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 100; align-items: flex-end; justify-content: center; }
+    .admin-overlay.open { display: flex; }
+    .admin-sheet { background: var(--white); border-radius: 24px 24px 0 0; width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto; padding: 20px 18px 32px; animation: sheetUp 0.25s ease; }
+    @keyframes sheetUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .sheet-handle { width: 36px; height: 4px; background: var(--border); border-radius: 99px; margin: 0 auto 18px; }
+    .sheet-title { font-family: var(--font-cond); font-size: 20px; font-weight: 800; color: var(--pitch); text-transform: uppercase; margin-bottom: 16px; }
+    .admin-wk-block { margin-bottom: 20px; }
+    .admin-wk-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .admin-wk-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .admin-wk-date { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+    .chips-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+    .chip { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 99px; }
+    .chip-yes { background: var(--pitch-pale); color: var(--pitch); }
+    .chip-no { background: var(--red-bg); color: var(--red); }
+    .chip-pending { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+    .admin-counts { font-size: 12px; color: var(--muted); display: flex; gap: 12px; }
+    .admin-divider { height: 1px; background: var(--border); margin: 16px 0; }
+    .player-row-admin { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 500; }
+    .player-row-admin:last-child { border-bottom: none; }
+    .remove-btn { font-size: 12px; color: var(--red); background: none; border: none; cursor: pointer; font-family: var(--font); font-weight: 600; padding: 4px 8px; border-radius: 6px; }
+    .remove-btn:hover { background: var(--red-bg); }
+    .add-row { display: flex; gap: 8px; margin-top: 12px; }
+    .add-row input { flex: 1; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: var(--font); background: var(--surface); color: var(--text); }
+    .add-row input:focus { outline: none; border-color: var(--pitch); }
+    .add-btn { padding: 10px 16px; background: var(--pitch); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: var(--font); }
+    .close-sheet { width: 100%; padding: 13px; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 14px; font-weight: 600; font-family: var(--font); color: var(--muted); cursor: pointer; margin-top: 16px; }
+    .setup-banner { background: #FFF8E1; border: 1px solid #FFD54F; border-radius: var(--radius); padding: 12px 14px; margin-bottom: 16px; font-size: 13px; color: #5D4037; line-height: 1.5; }
+    .loading-txt { text-align: center; padding: 1rem; color: var(--muted); font-size: 14px; }
   </style>
 </head>
 <body>
 
 <div class="header">
-  <div>
-    <div class="header-title">Weekend Cricket</div>
-    <div class="header-sub">office squad availability</div>
+  <div class="header-row">
+    <div class="app-name">Squad <span>Up</span> 🏏</div>
+    <button class="admin-pill" onclick="openAdmin()">Admin</button>
   </div>
-  <div class="cricket-icon">🏏</div>
+  <div class="weekend-grid" id="header-tiles">
+    <div class="loading-txt" style="grid-column:span 2;color:#74C69D;font-size:13px;padding:0.5rem 0;">Loading...</div>
+  </div>
 </div>
 
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('player')">My Availability</button>
-  <button class="tab" onclick="switchTab('admin')">Admin</button>
-</div>
-
-<div id="player-page" class="page active">
-  <div id="supabase-warning" class="setup-banner" style="display:none;">
-    <strong>⚠️ Database not connected</strong>
-    Open <code>config.js</code> and add your Supabase URL and anon key to get started.
+<div class="body">
+  <div id="setup-banner" class="setup-banner" style="display:none;">
+    ⚠️ <strong>Demo mode</strong> — open <code>config.js</code> and add your Supabase credentials to save real data.
   </div>
 
-  <div class="card">
-    <div class="card-label">Who are you?</div>
-    <select id="player-select" onchange="onPlayerChange()">
-      <option value="">Select your name...</option>
-    </select>
-  </div>
-
-  <div id="availability-card" style="display:none;">
-    <div class="card">
-      <div class="card-label">Your availability</div>
-      <div id="weekend-list"></div>
+  <div class="view active" id="view-pick">
+    <div class="section-label">Who are you?</div>
+    <div class="player-grid" id="player-grid">
+      <div class="loading-txt" style="grid-column:span 3;">Loading players...</div>
     </div>
-    <button class="btn-primary" id="save-btn" onclick="saveAvailability()">Save my availability</button>
-    <div class="toast" id="toast"></div>
+  </div>
+
+  <div class="view" id="view-avail">
+    <div class="avail-section">
+      <div class="avail-greeting" id="avail-greeting">Hey there 👋</div>
+      <div class="avail-sub">Tap your availability for each weekend</div>
+      <div id="avail-list"></div>
+      <button class="save-btn" id="save-btn" onclick="saveAvailability()">Save — I'm done ✓</button>
+    </div>
+  </div>
+
+  <div class="view" id="view-confirm">
+    <div class="confirm-view">
+      <div class="confirm-icon">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <path d="M7 18l8 8L29 10" stroke="#74C69D" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="confirm-title">You're in the book</div>
+      <div class="confirm-sub">Your availability is saved.<br/>We'll sort the squads on WhatsApp.</div>
+      <div class="confirm-chips" id="confirm-chips"></div>
+      <button class="back-btn" onclick="goBack()">Update my availability</button>
+    </div>
   </div>
 </div>
 
-<div id="admin-page" class="page">
-  <div class="card">
-    <div class="card-label">Weekend overview</div>
-    <div id="admin-overview"><div class="loading">Loading...</div></div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">Players</div>
-    <div id="player-manage-list"></div>
+<div class="admin-overlay" id="admin-overlay" onclick="handleOverlayClick(event)">
+  <div class="admin-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Admin view</div>
+    <div id="admin-overview"></div>
+    <div class="admin-divider"></div>
+    <div class="section-label">Players</div>
+    <div id="admin-player-list"></div>
     <div class="add-row">
-      <input type="text" id="new-player" placeholder="Add player name..." />
+      <input type="text" id="new-player-input" placeholder="Add player name..." />
       <button class="add-btn" onclick="addPlayer()">Add</button>
     </div>
+    <button class="close-sheet" onclick="closeAdmin()">Close</button>
   </div>
 </div>
 
@@ -410,7 +191,7 @@
 
   function initSupabase() {
     if (typeof SUPABASE_URL === 'undefined' || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
-      document.getElementById('supabase-warning').style.display = 'block';
+      document.getElementById('setup-banner').style.display = 'block';
       loadDemoData();
       return false;
     }
@@ -419,8 +200,16 @@
   }
 
   function loadDemoData() {
-    players = ['Gaurav', 'Rahul', 'Amit', 'Suresh', 'Vijay', 'Kiran', 'Dev', 'Nikhil', 'Arjun', 'Sanjay', 'Priya', 'Rohit'];
-    populatePlayerSelect();
+    players = ['Gaurav','Rahul','Amit','Suresh','Vijay','Kiran','Dev','Nikhil','Arjun','Sanjay','Priya','Rohit','Manish','Tarun'];
+    availability = {
+      'Gaurav': { w1: 'yes', w2: 'no' }, 'Rahul': { w1: 'yes', w2: 'yes' },
+      'Amit': { w1: 'yes' }, 'Suresh': { w2: 'yes', w3: 'yes' },
+      'Vijay': { w1: 'yes', w3: 'yes' }, 'Kiran': { w1: 'yes', w2: 'yes', w3: 'yes' },
+      'Dev': { w3: 'yes' }, 'Nikhil': { w1: 'yes', w2: 'yes' },
+      'Arjun': { w3: 'yes', w4: 'yes' },
+    };
+    renderPlayerGrid();
+    renderHeaderTiles();
   }
 
   async function loadPlayers() {
@@ -428,8 +217,7 @@
     const { data, error } = await supabaseClient.from('players').select('name').order('name');
     if (error) { console.error(error); return; }
     players = data.map(r => r.name);
-    populatePlayerSelect();
-    renderPlayerManage();
+    renderPlayerGrid();
   }
 
   async function loadAvailability() {
@@ -441,198 +229,215 @@
       if (!availability[r.player]) availability[r.player] = {};
       availability[r.player][r.weekend_id] = r.available ? 'yes' : 'no';
     });
-    renderAdminOverview();
+    renderHeaderTiles();
   }
 
-  function populatePlayerSelect() {
-    const sel = document.getElementById('player-select');
-    const val = sel.value;
-    sel.innerHTML = '<option value="">Select your name...</option>';
-    players.forEach(p => {
-      const o = document.createElement('option');
-      o.value = p; o.textContent = p;
-      if (p === val) o.selected = true;
-      sel.appendChild(o);
-    });
+  function getWeekendCounts() {
+    return WEEKENDS.map(w => ({
+      ...w, yes: players.filter(p => (availability[p] || {})[w.id] === 'yes').length
+    }));
   }
 
-  function onPlayerChange() {
-    selectedPlayer = document.getElementById('player-select').value;
-    if (!selectedPlayer) {
-      document.getElementById('availability-card').style.display = 'none';
-      return;
-    }
-    document.getElementById('availability-card').style.display = 'block';
-    renderWeekendList();
-  }
-
-  function renderWeekendList() {
-    const list = document.getElementById('weekend-list');
-    list.innerHTML = '';
-    WEEKENDS.forEach(w => {
-      const val = (availability[selectedPlayer] || {})[w.id] || null;
-      const row = document.createElement('div');
-      row.className = 'weekend-row';
-      row.innerHTML = `
-        <div>
-          <div class="weekend-name">${w.label}</div>
-          <div class="weekend-date">${w.date}</div>
+  function renderHeaderTiles() {
+    const counts = getWeekendCounts();
+    const container = document.getElementById('header-tiles');
+    container.innerHTML = '';
+    counts.forEach(w => {
+      const pct = Math.min(100, Math.round((w.yes / 11) * 100));
+      const isGood = w.yes >= 11;
+      const isUrgent = w.yes < 6;
+      let statusClass = 'need';
+      if (isGood) statusClass = 'set';
+      else if (w.yes >= 9) statusClass = 'close';
+      else if (isUrgent) statusClass = 'low';
+      const statusText = isGood ? 'Good to go!' : `Need ${11 - w.yes} more`;
+      const tile = document.createElement('div');
+      tile.className = `wk-tile${isGood ? ' good' : isUrgent ? ' urgent' : ''}`;
+      tile.innerHTML = `
+        <div class="wk-tile-date">${w.date}</div>
+        <div class="wk-tile-count">
+          <div class="wk-tile-num">${w.yes}</div>
+          <div class="wk-tile-denom">/ 11</div>
         </div>
-        <div class="toggle-wrap">
-          <button class="toggle yes ${val === 'yes' ? 'active' : ''}" onclick="setToggle('${w.id}', 'yes', this)">Yes</button>
-          <button class="toggle no ${val === 'no' ? 'active' : ''}" onclick="setToggle('${w.id}', 'no', this)">No</button>
-        </div>`;
-      list.appendChild(row);
+        <div class="wk-bar-bg"><div class="wk-bar-fill${isUrgent ? ' urgent' : ''}" style="width:${pct}%"></div></div>
+        <div class="wk-status ${statusClass}">${statusText}</div>`;
+      container.appendChild(tile);
     });
   }
 
-  function setToggle(weekendId, val, btn) {
+  function renderPlayerGrid() {
+    const grid = document.getElementById('player-grid');
+    grid.innerHTML = '';
+    players.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = `player-btn${p === selectedPlayer ? ' selected' : ''}`;
+      btn.textContent = p;
+      btn.onclick = () => selectPlayer(p);
+      grid.appendChild(btn);
+    });
+  }
+
+  function selectPlayer(name) {
+    selectedPlayer = name;
+    renderPlayerGrid();
+    showView('view-avail');
+    document.getElementById('avail-greeting').textContent = `Hey ${name} 👋`;
+    renderAvailList();
+  }
+
+  function renderAvailList() {
+    const counts = getWeekendCounts();
+    const list = document.getElementById('avail-list');
+    list.innerHTML = '';
+    counts.forEach(w => {
+      const val = (availability[selectedPlayer] || {})[w.id] || null;
+      const socialText = w.yes >= 11 ? `${w.yes} in — squad confirmed!` : w.yes >= 8 ? `${w.yes} in — nearly there` : `${w.yes} in so far`;
+      const socialClass = w.yes < 6 ? 'low' : '';
+      const card = document.createElement('div');
+      card.className = `wk-avail-card${val === 'yes' ? ' confirmed' : val === 'no' ? ' declined' : ''}`;
+      card.id = `avail-card-${w.id}`;
+      card.innerHTML = `
+        <div class="wk-avail-top">
+          <div>
+            <div class="wk-avail-name">${w.label}</div>
+            <div class="wk-avail-date">${w.date}</div>
+          </div>
+          <div class="wk-avail-social ${socialClass}">${socialText}</div>
+        </div>
+        <div class="yn-row">
+          <button class="yn-btn yes${val === 'yes' ? ' active' : ''}" onclick="setAvail('${w.id}','yes',this)">Yes, I'm in</button>
+          <button class="yn-btn no${val === 'no' ? ' active' : ''}" onclick="setAvail('${w.id}','no',this)">Can't make it</button>
+        </div>`;
+      list.appendChild(card);
+    });
+  }
+
+  function setAvail(weekendId, val, btn) {
     if (!availability[selectedPlayer]) availability[selectedPlayer] = {};
     availability[selectedPlayer][weekendId] = val;
-    const wrap = btn.closest('.toggle-wrap');
-    wrap.querySelectorAll('.toggle').forEach(b => b.classList.remove('active'));
+    const card = document.getElementById(`avail-card-${weekendId}`);
+    card.classList.remove('confirmed', 'declined');
+    card.classList.add(val === 'yes' ? 'confirmed' : 'declined');
+    btn.closest('.yn-row').querySelectorAll('.yn-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
   }
 
   async function saveAvailability() {
     if (!selectedPlayer) return;
     const btn = document.getElementById('save-btn');
-    const toast = document.getElementById('toast');
     btn.disabled = true;
     btn.textContent = 'Saving...';
-
-    if (!supabaseClient) {
-      btn.disabled = false;
-      btn.textContent = 'Save my availability';
-      toast.className = 'toast';
-      toast.textContent = 'Saved! (demo mode — connect Supabase to persist data)';
-      toast.style.display = 'block';
-      setTimeout(() => toast.style.display = 'none', 4000);
-      return;
+    if (supabaseClient) {
+      try {
+        const rows = WEEKENDS.map(w => ({
+          player: selectedPlayer, weekend_id: w.id,
+          available: (availability[selectedPlayer] || {})[w.id] === 'yes'
+        }));
+        const { error } = await supabaseClient.from('availability').upsert(rows, { onConflict: 'player,weekend_id' });
+        if (error) throw error;
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = "Save — I'm done ✓";
+        alert('Error saving: ' + (err.message || JSON.stringify(err)));
+        return;
+      }
     }
-
-    try {
-      const rows = WEEKENDS.map(w => ({
-        player: selectedPlayer,
-        weekend_id: w.id,
-        available: (availability[selectedPlayer] || {})[w.id] === 'yes'
-      }));
-
-      const { error } = await supabaseClient
-        .from('availability')
-        .upsert(rows, { onConflict: 'player,weekend_id' });
-
-      if (error) throw error;
-
-      toast.className = 'toast';
-      toast.textContent = '✓ Saved! See you on the pitch.';
-      toast.style.display = 'block';
-      setTimeout(() => toast.style.display = 'none', 3500);
-    } catch (err) {
-      toast.className = 'toast error';
-      toast.textContent = 'Error saving. Check your connection.';
-      toast.style.display = 'block';
-    }
-
+    renderHeaderTiles();
+    renderConfirmChips();
+    showView('view-confirm');
     btn.disabled = false;
-    btn.textContent = 'Save my availability';
+    btn.textContent = "Save — I'm done ✓";
   }
 
-  function renderAdminOverview() {
-    const container = document.getElementById('admin-overview');
-    if (!players.length) { container.innerHTML = '<div class="loading">No players yet</div>'; return; }
-    container.innerHTML = '';
+  function renderConfirmChips() {
+    const chips = document.getElementById('confirm-chips');
+    chips.innerHTML = '';
     WEEKENDS.forEach(w => {
-      const yes = [], no = [], pending = [];
-      players.forEach(p => {
-        const v = (availability[p] || {})[w.id];
-        if (v === 'yes') yes.push(p);
-        else if (v === 'no') no.push(p);
-        else pending.push(p);
-      });
-      const enough = yes.length >= 11;
+      const val = (availability[selectedPlayer] || {})[w.id];
+      const chip = document.createElement('div');
+      chip.className = `confirm-chip ${val === 'yes' ? 'in' : val === 'no' ? 'out' : 'skip'}`;
+      chip.textContent = `${w.date} ${val === 'yes' ? '✓' : val === 'no' ? '✗' : '?'}`;
+      chips.appendChild(chip);
+    });
+  }
+
+  function goBack() { showView('view-avail'); }
+
+  function showView(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openAdmin() { renderAdminOverview(); renderAdminPlayers(); document.getElementById('admin-overlay').classList.add('open'); }
+  function closeAdmin() { document.getElementById('admin-overlay').classList.remove('open'); }
+  function handleOverlayClick(e) { if (e.target === document.getElementById('admin-overlay')) closeAdmin(); }
+
+  function renderAdminOverview() {
+    const counts = getWeekendCounts();
+    const container = document.getElementById('admin-overview');
+    container.innerHTML = '';
+    counts.forEach((w, i) => {
+      const yes = players.filter(p => (availability[p] || {})[w.id] === 'yes');
+      const no = players.filter(p => (availability[p] || {})[w.id] === 'no');
+      const pending = players.filter(p => !(availability[p] || {})[w.id]);
       const div = document.createElement('div');
-      div.className = 'weekend-block';
+      div.className = 'admin-wk-block';
       div.innerHTML = `
-        <div class="weekend-header">
-          <div class="weekend-title">${w.label} <span class="weekend-title-date">${w.date}</span></div>
-          <span class="badge ${enough ? 'badge-green' : 'badge-amber'}">${yes.length} confirmed</span>
+        <div class="admin-wk-header">
+          <div><span class="admin-wk-title">${w.label}</span><span class="admin-wk-date">${w.date}</span></div>
+          <div class="wk-status ${w.yes >= 11 ? 'set' : w.yes >= 9 ? 'close' : 'need'}">${w.yes} confirmed</div>
         </div>
-        <div class="chips">
+        <div class="chips-row">
           ${yes.map(p => `<span class="chip chip-yes">${p}</span>`).join('')}
           ${no.map(p => `<span class="chip chip-no">${p}</span>`).join('')}
           ${pending.map(p => `<span class="chip chip-pending">${p}</span>`).join('')}
         </div>
-        <div class="counts">
-          <span>✓ ${yes.length} in</span>
-          <span>✗ ${no.length} out</span>
-          <span>? ${pending.length} pending</span>
-          ${enough ? '<span style="color:var(--green);font-weight:600">Good to go!</span>' : `<span style="color:var(--amber)">Need ${11 - yes.length} more</span>`}
+        <div class="admin-counts">
+          <span>✓ ${yes.length} in</span><span>✗ ${no.length} out</span><span>? ${pending.length} pending</span>
+          ${w.yes >= 11 ? '<span style="color:var(--pitch-light);font-weight:700">Good to go!</span>' : `<span style="color:var(--amber);font-weight:700">Need ${11 - w.yes} more</span>`}
         </div>`;
       container.appendChild(div);
+      if (i < counts.length - 1) { const hr = document.createElement('div'); hr.className = 'admin-divider'; container.appendChild(hr); }
     });
   }
 
-  function renderPlayerManage() {
-    const list = document.getElementById('player-manage-list');
+  function renderAdminPlayers() {
+    const list = document.getElementById('admin-player-list');
     list.innerHTML = '';
     players.forEach(p => {
       const row = document.createElement('div');
-      row.className = 'player-row';
+      row.className = 'player-row-admin';
       row.innerHTML = `<span>${p}</span><button class="remove-btn" onclick="removePlayer('${p}')">Remove</button>`;
       list.appendChild(row);
     });
   }
 
   async function addPlayer() {
-    const input = document.getElementById('new-player');
+    const input = document.getElementById('new-player-input');
     const name = input.value.trim();
     if (!name || players.includes(name)) return;
-
     if (supabaseClient) {
       const { error } = await supabaseClient.from('players').insert({ name });
       if (error) { console.error(error); return; }
     }
-
-    players.push(name);
-    players.sort();
-    input.value = '';
-    populatePlayerSelect();
-    renderPlayerManage();
-    renderAdminOverview();
+    players.push(name); players.sort(); input.value = '';
+    renderPlayerGrid(); renderAdminPlayers(); renderAdminOverview(); renderHeaderTiles();
   }
 
   async function removePlayer(name) {
     if (!confirm(`Remove ${name} from the squad?`)) return;
-
     if (supabaseClient) {
       await supabaseClient.from('players').delete().eq('name', name);
       await supabaseClient.from('availability').delete().eq('player', name);
     }
-
     players = players.filter(p => p !== name);
     delete availability[name];
-    populatePlayerSelect();
-    renderPlayerManage();
-    renderAdminOverview();
+    renderPlayerGrid(); renderAdminPlayers(); renderAdminOverview(); renderHeaderTiles();
   }
 
-  function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    event.target.classList.add('active');
-    document.getElementById(tab + '-page').classList.add('active');
-    if (tab === 'admin') {
-      renderAdminOverview();
-      renderPlayerManage();
-    }
-  }
-
-  // Init
   const connected = initSupabase();
-  if (connected) {
-    loadPlayers().then(() => loadAvailability());
-  }
+  if (connected) { loadPlayers().then(() => loadAvailability()); }
 </script>
 </body>
 </html>
