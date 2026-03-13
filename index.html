@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weekend Cricket</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #2D6A4F;
+      --green-light: #B7E4C7;
+      --green-bg: #F0FBF4;
+      --red: #C0392B;
+      --red-light: #FADBD8;
+      --amber: #D35400;
+      --amber-light: #FAE5D3;
+      --gray: #F7F7F5;
+      --border: #E5E5E0;
+      --text: #1A1A18;
+      --muted: #6B6B64;
+      --white: #FFFFFF;
+      --radius: 10px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #F2F1EE;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    .header {
+      background: var(--green);
+      color: white;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      opacity: 0.7;
+      font-family: 'DM Mono', monospace;
+      margin-top: 2px;
+    }
+
+    .cricket-icon {
+      font-size: 28px;
+    }
+
+    .tabs {
+      display: flex;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .tab.active {
+      color: var(--green);
+      border-bottom-color: var(--green);
+    }
+
+    .page { display: none; padding: 1.25rem; max-width: 600px; margin: 0 auto; }
+    .page.active { display: block; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--gray);
+      color: var(--text);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6B64' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      cursor: pointer;
+    }
+
+    .weekend-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .weekend-row:last-child { border-bottom: none; }
+
+    .weekend-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .weekend-date {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      margin-top: 2px;
+    }
+
+    .toggle-wrap { display: flex; gap: 6px; }
+
+    .toggle {
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--gray);
+      color: var(--muted);
+      transition: all 0.12s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .toggle.yes.active {
+      background: var(--green-bg);
+      color: var(--green);
+      border-color: var(--green-light);
+    }
+
+    .toggle.no.active {
+      background: var(--red-light);
+      color: var(--red);
+      border-color: #F1948A;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.15s;
+      margin-top: 4px;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .toast {
+      display: none;
+      background: var(--green-bg);
+      color: var(--green);
+      border: 1px solid var(--green-light);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 13px;
+      text-align: center;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+
+    .toast.error {
+      background: var(--red-light);
+      color: var(--red);
+      border-color: #F1948A;
+    }
+
+    /* Admin */
+    .weekend-block { margin-bottom: 1.25rem; }
+
+    .weekend-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .weekend-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .weekend-title-date {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-weight: 400;
+      margin-left: 6px;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .badge-green { background: var(--green-bg); color: var(--green); }
+    .badge-amber { background: var(--amber-light); color: var(--amber); }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+
+    .chip {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-weight: 500;
+    }
+
+    .chip-yes { background: var(--green-bg); color: var(--green); }
+    .chip-no { background: var(--red-light); color: var(--red); }
+    .chip-pending { background: var(--gray); color: var(--muted); border: 1px solid var(--border); }
+
+    .counts {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      display: flex;
+      gap: 14px;
+    }
+
+    .player-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .player-row:last-child { border-bottom: none; }
+
+    .remove-btn {
+      font-size: 12px;
+      color: var(--red);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .remove-btn:hover { background: var(--red-light); }
+
+    .add-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .add-row input {
+      flex: 1;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--gray);
+      color: var(--text);
+    }
+
+    .add-row input:focus { outline: none; border-color: var(--green); }
+
+    .add-btn {
+      padding: 9px 16px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .setup-banner {
+      background: #FFF8E1;
+      border: 1px solid #FFD54F;
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      font-size: 13px;
+      color: #5D4037;
+      line-height: 1.6;
+    }
+
+    .setup-banner strong { display: block; margin-bottom: 4px; font-size: 14px; }
+    .setup-banner code { background: #FFF3CD; padding: 1px 5px; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">Weekend Cricket</div>
+    <div class="header-sub">office squad availability</div>
+  </div>
+  <div class="cricket-icon">🏏</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('player')">My Availability</button>
+  <button class="tab" onclick="switchTab('admin')">Admin</button>
+</div>
+
+<div id="player-page" class="page active">
+  <div id="supabase-warning" class="setup-banner" style="display:none;">
+    <strong>⚠️ Database not connected</strong>
+    Open <code>config.js</code> and add your Supabase URL and anon key to get started.
+  </div>
+
+  <div class="card">
+    <div class="card-label">Who are you?</div>
+    <select id="player-select" onchange="onPlayerChange()">
+      <option value="">Select your name...</option>
+    </select>
+  </div>
+
+  <div id="availability-card" style="display:none;">
+    <div class="card">
+      <div class="card-label">Your availability</div>
+      <div id="weekend-list"></div>
+    </div>
+    <button class="btn-primary" id="save-btn" onclick="saveAvailability()">Save my availability</button>
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<div id="admin-page" class="page">
+  <div class="card">
+    <div class="card-label">Weekend overview</div>
+    <div id="admin-overview"><div class="loading">Loading...</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Players</div>
+    <div id="player-manage-list"></div>
+    <div class="add-row">
+      <input type="text" id="new-player" placeholder="Add player name..." />
+      <button class="add-btn" onclick="addPlayer()">Add</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const WEEKENDS = [
+    { id: 'w1', label: 'Weekend 1', date: 'Sat 14 Jun' },
+    { id: 'w2', label: 'Weekend 2', date: 'Sat 21 Jun' },
+    { id: 'w3', label: 'Weekend 3', date: 'Sat 28 Jun' },
+    { id: 'w4', label: 'Weekend 4', date: 'Sat 5 Jul' },
+  ];
+
+  let supabase = null;
+  let players = [];
+  let availability = {};
+  let selectedPlayer = '';
+
+  function initSupabase() {
+    if (typeof SUPABASE_URL === 'undefined' || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+      document.getElementById('supabase-warning').style.display = 'block';
+      loadDemoData();
+      return false;
+    }
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    return true;
+  }
+
+  function loadDemoData() {
+    players = ['Gaurav', 'Rahul', 'Amit', 'Suresh', 'Vijay', 'Kiran', 'Dev', 'Nikhil', 'Arjun', 'Sanjay', 'Priya', 'Rohit'];
+    populatePlayerSelect();
+  }
+
+  async function loadPlayers() {
+    if (!supabase) return;
+    const { data, error } = await supabase.from('players').select('name').order('name');
+    if (error) { console.error(error); return; }
+    players = data.map(r => r.name);
+    populatePlayerSelect();
+    renderPlayerManage();
+  }
+
+  async function loadAvailability() {
+    if (!supabase) return;
+    const { data, error } = await supabase.from('availability').select('*');
+    if (error) { console.error(error); return; }
+    availability = {};
+    data.forEach(r => {
+      if (!availability[r.player]) availability[r.player] = {};
+      availability[r.player][r.weekend_id] = r.available ? 'yes' : 'no';
+    });
+    renderAdminOverview();
+  }
+
+  function populatePlayerSelect() {
+    const sel = document.getElementById('player-select');
+    const val = sel.value;
+    sel.innerHTML = '<option value="">Select your name...</option>';
+    players.forEach(p => {
+      const o = document.createElement('option');
+      o.value = p; o.textContent = p;
+      if (p === val) o.selected = true;
+      sel.appendChild(o);
+    });
+  }
+
+  function onPlayerChange() {
+    selectedPlayer = document.getElementById('player-select').value;
+    if (!selectedPlayer) {
+      document.getElementById('availability-card').style.display = 'none';
+      return;
+    }
+    document.getElementById('availability-card').style.display = 'block';
+    renderWeekendList();
+  }
+
+  function renderWeekendList() {
+    const list = document.getElementById('weekend-list');
+    list.innerHTML = '';
+    WEEKENDS.forEach(w => {
+      const val = (availability[selectedPlayer] || {})[w.id] || null;
+      const row = document.createElement('div');
+      row.className = 'weekend-row';
+      row.innerHTML = `
+        <div>
+          <div class="weekend-name">${w.label}</div>
+          <div class="weekend-date">${w.date}</div>
+        </div>
+        <div class="toggle-wrap">
+          <button class="toggle yes ${val === 'yes' ? 'active' : ''}" onclick="setToggle('${w.id}', 'yes', this)">Yes</button>
+          <button class="toggle no ${val === 'no' ? 'active' : ''}" onclick="setToggle('${w.id}', 'no', this)">No</button>
+        </div>`;
+      list.appendChild(row);
+    });
+  }
+
+  function setToggle(weekendId, val, btn) {
+    if (!availability[selectedPlayer]) availability[selectedPlayer] = {};
+    availability[selectedPlayer][weekendId] = val;
+    const wrap = btn.closest('.toggle-wrap');
+    wrap.querySelectorAll('.toggle').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  async function saveAvailability() {
+    if (!selectedPlayer) return;
+    const btn = document.getElementById('save-btn');
+    const toast = document.getElementById('toast');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    if (!supabase) {
+      btn.disabled = false;
+      btn.textContent = 'Save my availability';
+      toast.className = 'toast';
+      toast.textContent = 'Saved! (demo mode — connect Supabase to persist data)';
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 4000);
+      return;
+    }
+
+    try {
+      const rows = WEEKENDS.map(w => ({
+        player: selectedPlayer,
+        weekend_id: w.id,
+        available: (availability[selectedPlayer] || {})[w.id] === 'yes'
+      }));
+
+      const { error } = await supabase
+        .from('availability')
+        .upsert(rows, { onConflict: 'player,weekend_id' });
+
+      if (error) throw error;
+
+      toast.className = 'toast';
+      toast.textContent = '✓ Saved! See you on the pitch.';
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 3500);
+    } catch (err) {
+      toast.className = 'toast error';
+      toast.textContent = 'Error saving. Check your connection.';
+      toast.style.display = 'block';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Save my availability';
+  }
+
+  function renderAdminOverview() {
+    const container = document.getElementById('admin-overview');
+    if (!players.length) { container.innerHTML = '<div class="loading">No players yet</div>'; return; }
+    container.innerHTML = '';
+    WEEKENDS.forEach(w => {
+      const yes = [], no = [], pending = [];
+      players.forEach(p => {
+        const v = (availability[p] || {})[w.id];
+        if (v === 'yes') yes.push(p);
+        else if (v === 'no') no.push(p);
+        else pending.push(p);
+      });
+      const enough = yes.length >= 11;
+      const div = document.createElement('div');
+      div.className = 'weekend-block';
+      div.innerHTML = `
+        <div class="weekend-header">
+          <div class="weekend-title">${w.label} <span class="weekend-title-date">${w.date}</span></div>
+          <span class="badge ${enough ? 'badge-green' : 'badge-amber'}">${yes.length} confirmed</span>
+        </div>
+        <div class="chips">
+          ${yes.map(p => `<span class="chip chip-yes">${p}</span>`).join('')}
+          ${no.map(p => `<span class="chip chip-no">${p}</span>`).join('')}
+          ${pending.map(p => `<span class="chip chip-pending">${p}</span>`).join('')}
+        </div>
+        <div class="counts">
+          <span>✓ ${yes.length} in</span>
+          <span>✗ ${no.length} out</span>
+          <span>? ${pending.length} pending</span>
+          ${enough ? '<span style="color:var(--green);font-weight:600">Good to go!</span>' : `<span style="color:var(--amber)">Need ${11 - yes.length} more</span>`}
+        </div>`;
+      container.appendChild(div);
+    });
+  }
+
+  function renderPlayerManage() {
+    const list = document.getElementById('player-manage-list');
+    list.innerHTML = '';
+    players.forEach(p => {
+      const row = document.createElement('div');
+      row.className = 'player-row';
+      row.innerHTML = `<span>${p}</span><button class="remove-btn" onclick="removePlayer('${p}')">Remove</button>`;
+      list.appendChild(row);
+    });
+  }
+
+  async function addPlayer() {
+    const input = document.getElementById('new-player');
+    const name = input.value.trim();
+    if (!name || players.includes(name)) return;
+
+    if (supabase) {
+      const { error } = await supabase.from('players').insert({ name });
+      if (error) { console.error(error); return; }
+    }
+
+    players.push(name);
+    players.sort();
+    input.value = '';
+    populatePlayerSelect();
+    renderPlayerManage();
+    renderAdminOverview();
+  }
+
+  async function removePlayer(name) {
+    if (!confirm(`Remove ${name} from the squad?`)) return;
+
+    if (supabase) {
+      await supabase.from('players').delete().eq('name', name);
+      await supabase.from('availability').delete().eq('player', name);
+    }
+
+    players = players.filter(p => p !== name);
+    delete availability[name];
+    populatePlayerSelect();
+    renderPlayerManage();
+    renderAdminOverview();
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(tab + '-page').classList.add('active');
+    if (tab === 'admin') {
+      renderAdminOverview();
+      renderPlayerManage();
+    }
+  }
+
+  // Init
+  const connected = initSupabase();
+  if (connected) {
+    loadPlayers().then(() => loadAvailability());
+  }
+</script>
+</body>
+</html>
