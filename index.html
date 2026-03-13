@@ -518,7 +518,7 @@
         available: (availability[selectedPlayer] || {})[w.id] === 'yes'
       }));
 
-      const { error } = await supabaseClientClient
+      const { error } = await supabaseClient
         .from('availability')
         .upsert(rows, { onConflict: 'player,weekend_id' });
 
@@ -530,8 +530,7 @@
       setTimeout(() => toast.style.display = 'none', 3500);
     } catch (err) {
       toast.className = 'toast error';
-      toast.textContent = 'Error: ' + (err.message || JSON.stringify(err));
-console.error('Full error:', err);
+      toast.textContent = 'Error saving. Check your connection.';
       toast.style.display = 'block';
     }
 
@@ -591,7 +590,7 @@ console.error('Full error:', err);
     if (!name || players.includes(name)) return;
 
     if (supabaseClient) {
-      const { error } = await supabaseClientClient.from('players').insert({ name });
+      const { error } = await supabaseClient.from('players').insert({ name });
       if (error) { console.error(error); return; }
     }
 
