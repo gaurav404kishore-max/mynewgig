@@ -403,7 +403,7 @@
     { id: 'w4', label: 'Weekend 4', date: 'Sat 5 Jul' },
   ];
 
-  let supabase = null;
+  let supabaseClient = null;
   let players = [];
   let availability = {};
   let selectedPlayer = '';
@@ -414,7 +414,7 @@
       loadDemoData();
       return false;
     }
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     return true;
   }
 
@@ -424,8 +424,8 @@
   }
 
   async function loadPlayers() {
-    if (!supabase) return;
-    const { data, error } = await supabase.from('players').select('name').order('name');
+    if (!supabaseClient) return;
+    const { data, error } = await supabaseClient.from('players').select('name').order('name');
     if (error) { console.error(error); return; }
     players = data.map(r => r.name);
     populatePlayerSelect();
@@ -433,8 +433,8 @@
   }
 
   async function loadAvailability() {
-    if (!supabase) return;
-    const { data, error } = await supabase.from('availability').select('*');
+    if (!supabaseClient) return;
+    const { data, error } = await supabaseClient.from('availability').select('*');
     if (error) { console.error(error); return; }
     availability = {};
     data.forEach(r => {
@@ -501,7 +501,7 @@
     btn.disabled = true;
     btn.textContent = 'Saving...';
 
-    if (!supabase) {
+    if (!supabaseClient) {
       btn.disabled = false;
       btn.textContent = 'Save my availability';
       toast.className = 'toast';
@@ -518,7 +518,7 @@
         available: (availability[selectedPlayer] || {})[w.id] === 'yes'
       }));
 
-      const { error } = await supabase
+      const { error } = await supabaseClientClient
         .from('availability')
         .upsert(rows, { onConflict: 'player,weekend_id' });
 
@@ -589,8 +589,8 @@
     const name = input.value.trim();
     if (!name || players.includes(name)) return;
 
-    if (supabase) {
-      const { error } = await supabase.from('players').insert({ name });
+    if (supabaseClient) {
+      const { error } = await supabaseClientClient.from('players').insert({ name });
       if (error) { console.error(error); return; }
     }
 
@@ -605,9 +605,9 @@
   async function removePlayer(name) {
     if (!confirm(`Remove ${name} from the squad?`)) return;
 
-    if (supabase) {
-      await supabase.from('players').delete().eq('name', name);
-      await supabase.from('availability').delete().eq('player', name);
+    if (supabaseClient) {
+      await supabaseClient.from('players').delete().eq('name', name);
+      await supabaseClient.from('availability').delete().eq('player', name);
     }
 
     players = players.filter(p => p !== name);
